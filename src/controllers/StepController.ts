@@ -20,4 +20,20 @@ const saveSteps = async (req: CustomRequest, res: Response): Promise<void> => {
     }
 };
 
-export { saveSteps };
+const getSteps = async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
+        const userId = req.user.id;
+
+        const stepData = await prisma.stepData.findMany({
+            where: { userId },
+            orderBy: { date: 'desc' }
+        });
+
+        res.json({ stepData });
+    } catch (error) {
+        console.error('Get steps error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+export { saveSteps , getSteps };
