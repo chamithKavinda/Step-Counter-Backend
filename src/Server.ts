@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/AuthRoute';
+import stepRoutes from './routes/StepRoute';
 import { authenticateToken } from './middlewares/AuthMiddleware';
 
 dotenv.config();
@@ -13,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/steps', authenticateToken);
+app.use('/api/steps', authenticateToken , stepRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Step Counter API is running');
