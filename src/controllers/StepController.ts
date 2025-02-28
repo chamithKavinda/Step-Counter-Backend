@@ -55,4 +55,42 @@ const getDailySteps = async (req: CustomRequest, res: Response): Promise<void> =
     }
 };
 
-export { saveSteps , getSteps ,getDailySteps};
+const getWeeklySteps = async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
+        const userId = req.user.id;
+
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        const stepData = await prisma.stepData.findMany({
+            where: { userId, date: { gte: sevenDaysAgo } }
+        });
+
+        const dailySteps: Record<string, number> = {};
+        for (let i = 0; i < 7; i++) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            date.setHours(0, 0, 0, 0);
+            const dayString = date.toISOString().split('T')[0];
+            dailySteps[dayString] = 0;
+        }
+
+        stepData.forEach(entry => {
+            const dayString = entry.date.toISOString().split('T')[0];
+            if (dailySteps[dayString] !== undefined) {
+                dailySteps[dayString] += entry.steps;
+            }
+        });
+
+        const weeklyData = Object.entries(dailySteps).map(([date, steps]) => ({ date, steps }));
+        weeklyData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+        res.json({ weeklyData });
+    } catch (error) {
+        console.error('Get weekly steps error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+export { saveSteps , getSteps , getDailySteps , getWeeklySteps};

@@ -20,7 +20,6 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Step Counter API is running');
 });
 
-
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
