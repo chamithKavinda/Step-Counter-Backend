@@ -72,7 +72,7 @@ For detailed API documentation, refer to the [API Documentation](https://documen
 ## Frontend Repository
 
 You can find the frontend repository for the SessionsPRO System at the following link:  
-[SessionsPRO Frontend]()
+[Step Counter Frontend](https://github.com/chamithKavinda/Step-Counter-Frontend)
 
 ---
 
